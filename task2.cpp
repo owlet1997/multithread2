@@ -3,13 +3,10 @@
 //
 #include <iostream>
 #include <random>
-#include <malloc.h>
 #include <chrono>
 #include <omp.h>
 
 using namespace std;
-
-const double delim = 1000000000;
 
 double funcPi(double x) {return 4/(pow(x,2)+1);}
 
@@ -23,7 +20,8 @@ double Simpson_integral_PI(double a, double b, int n) {
         k1 += funcPi(a + i * h);
         k2 += funcPi(a + (i + 1) * h);
     }
-    return h/3*(funcPi(a) + 4*k1 + 2*k2 - funcPi(b));
+    double s = h/3*(funcPi(a) + 4*k1 + 2*k2 - funcPi(b));
+    return s;
 }
 
 
@@ -41,7 +39,7 @@ void Task2() {
     cout << "Var.1: По правому верхнему квадранту единичной окружности" << endl;
 
     for (auto i = 0; i < n; ++i) {
-        if(IsPointInCircle( 1.0, abs((float)rand() / RAND_MAX * 2 - 1), abs((float)rand() / RAND_MAX * 2 - 1))) {
+        if(IsPointInCircle( 1.0, (float)rand() / RAND_MAX, (float)rand() / RAND_MAX) ) {
             pointsInCircle++;
         }
     }
