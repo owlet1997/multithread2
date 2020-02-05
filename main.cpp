@@ -1,11 +1,9 @@
+#include <iostream>
 #include "firstPart.h"
 #include "secondPart.h"
-
-using namespace std;
-
-int main(){
-
-  //  firstPart();
-    secondTask();
+//
+int main() {
+   // firstPart();
+    secondPart();
     return 0;
 }

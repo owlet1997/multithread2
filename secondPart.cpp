@@ -1,41 +1,62 @@
-//
-// Created by owlet on 25.11.2019.
-//
-/*
-Напишите программу, порождающую два потока, конкурентно
-инкрементирующих разделяемую переменную (для каждого потока задается
-свое количество раз инкремента переменной. Например, первый поток
-инкрементирует 3 раза, второй – 4).
-*/
-
-#include <iostream>
-#include <thread>
 #include <chrono>
-#include <cstdlib>
+#include <iomanip>
+#include <iostream>
+#include <random>
+#include <thread>
+#include <vector>
+#include <sstream>
 #include <mutex>
+
 
 using namespace std;
 
-mutex mut;
+mutex m;
 
-void Increment(int &value, int num_incrementation){
-    for(int i = 0; i < num_incrementation; i++){
-        this_thread::sleep_for(chrono::milliseconds(10));
-        mut.lock();
-        value++;
-        cout << "Номер потока: " << this_thread::get_id() << " | Значение переменной: " << value << endl;
-        mut.unlock();
+class Counter {
+    long long mId = 0;
+public:
+    long long inc_id() {
+        ++mId;
+        return mId;
     }
-    this_thread::sleep_for(chrono::milliseconds(10));
+    long long dec_id() {
+        --mId;
+        return mId;
+    }
+
+    long long get_id(){
+        return mId;
+    }
+};
+void increment(int num_increments, Counter *counter){
+
+    for (int i=0; i<num_increments; i++){
+        m.lock();
+        counter->inc_id();
+        m.unlock();
+    }
+
 }
 
-void secondTask(){
-    srand(time(NULL));
-    int share_value = 0;
-    cout << "\n\nВторая задача, конкуррентное инкрементирование переменной" << endl;
-    thread th7(Increment, ref(share_value), 5);
-    thread th8(Increment, ref(share_value), 7);
-    th7.join();
-    th8.join();
+void decrement(int num_increments, Counter *counter){
+    for (int i=0; i<num_increments; i++){
+        m.lock();
+        counter->dec_id();
+        m.unlock();
+    }
+}
 
+
+int secondPart() {
+
+    Counter *counter =new Counter();
+    thread th1(increment, 100000, ref(counter));
+    thread th2(decrement, 100000, ref(counter));
+
+    th1.join();
+    th2.join();
+
+    cout << counter->get_id();
+
+    return 0;
 }
