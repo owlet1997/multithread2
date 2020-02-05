@@ -1,0 +1,8 @@
+//
+// Created by owlet on 25.11.2019.
+//
+
+#ifndef MULTITHREAD5_WRITERSREADERS_H
+#define MULTITHREAD5_WRITERSREADERS_H
+void writersReaders();
+#endif //MULTITHREAD5_WRITERSREADERS_H
